@@ -1,41 +1,27 @@
-#VPC_NETWORK
-output "network_name" {
-  value       = google_compute_network.vpc_network.name
-  description = "The name of the VPC being created"
+#GKE
+output "kubernetes_endpoint" {
+  description = "The cluster endpoint"
+  sensitive   = true
+  value       = module.gke.endpoint
 }
 
-output "network_self_link" {
-  value       = google_compute_network.vpc_network.self_link
-  description = "The URI of the VPC being created"
+output "client_token" {
+  description = "The bearer token for auth"
+  sensitive   = true
+  value       = base64encode(data.google_client_config.default.access_token)
 }
 
-output "project_id" {
-  value       = google_compute_network.vpc_network.project
-  description = "VPC project id"
+output "ca_certificate" {
+  description = "The cluster ca certificate (base64 encoded)"
+  value       = module.gke.ca_certificate
 }
 
-output "auto" {
-  value       = google_compute_network.vpc_network.auto_create_subnetworks
-  description = "The value of the auto mode setting"
+output "service_account" {
+  description = "The default service account used for running nodes."
+  value       = module.gke.service_account
 }
 
-#FIREWALL_RULES
-output "name" {
-  value       = google_compute_firewall.rules.name
-  description = "The name of the firewall rule being created"
-}
-
-output "network_name" {
-  value       = google_compute_firewall.rules.network
-  description = "The name of the VPC network where the firewall rule will be applied"
-}
-
-output "rule_self_link" {
-  value       = google_compute_firewall.rules.self_link
-  description = "The URI of the firewall rule  being created"
-}
-
-output "project_id" {
-  value       = google_compute_firewall.rules.project
-  description = "Google Cloud project ID"
+output "cluster_name" {
+  description = "Cluster name"
+  value       = module.gke.name
 }

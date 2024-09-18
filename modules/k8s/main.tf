@@ -1,22 +1,26 @@
 
-#VPC_NETWORK
-resource "google_compute_network" "vpc_network" {
-  project                 = var.project_id # Replace this with your project ID in quotes
-  name                    = "my-custom-mode-network"
-  auto_create_subnetworks = true
-  mtu                     = 1460
+#GKE
+
+data "google_client_config" "default" {}
+
+provider "kubernetes" {
+  host                   = "https://${module.gke.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
 }
 
-#FIREWALL_RULES
-resource "google_compute_firewall" "rules" {
-  project     = var.project_id # Replace this with your project ID in quotes
-  name        = "my-firewall-rule"
-  network     = "default"
-  description = "Creates firewall rule targeting tagged instances"
+module "gke" {
+  source  = "terraform-google-modules/kubernetes-engine/google"
+  version = "~> 33.0"
 
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "8080", "1000-2000"]
-  }
-  target_tags = ["web"]
+  project_id             = var.project_id
+  name                   = var.cluster_name
+  regional               = true
+  region                 = var.region
+  network                = var.network
+  subnetwork             = var.subnetwork
+  ip_range_pods          = var.ip_range_pods_name
+  ip_range_services      = var.ip_range_services_name
+  create_service_account = true
+  deletion_protection    = false
 }

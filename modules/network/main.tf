@@ -1,22 +1,30 @@
 
 #VPC_NETWORK
-resource "google_compute_network" "vpc_network" {
-  project                 = var.project_id # Replace this with your project ID in quotes
-  name                    = "my-custom-mode-network"
-  auto_create_subnetworks = true
-  mtu                     = 1460
-}
+module "gcp-network" {
+  source  = "terraform-google-modules/network/google"
+  version = ">= 7.5"
 
-#FIREWALL_RULES
-resource "google_compute_firewall" "rules" {
-  project     = var.project_id # Replace this with your project ID in quotes
-  name        = "my-firewall-rule"
-  network     = "default"
-  description = "Creates firewall rule targeting tagged instances"
+  project_id   = var.project_id
+  network_name = var.network
 
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "8080", "1000-2000"]
+  subnets = [
+    {
+      subnet_name   = var.subnetwork
+      subnet_ip     = "10.0.0.0/17"
+      subnet_region = var.region
+    },
+  ]
+
+  secondary_ranges = {
+    (var.subnetwork) = [
+      {
+        range_name    = var.ip_range_pods_name
+        ip_cidr_range = "192.168.0.0/18"
+      },
+      {
+        range_name    = var.ip_range_services_name
+        ip_cidr_range = "192.168.64.0/18"
+      },
+    ]
   }
-  target_tags = ["web"]
 }
