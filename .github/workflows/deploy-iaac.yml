@@ -43,8 +43,6 @@ jobs:
         output-file: README.md
         output-method: inject
         git-push: "true"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Render terraform docs network and push changes back to PR
       uses: terraform-docs/gh-actions@main
@@ -53,8 +51,6 @@ jobs:
         output-file: README.md
         output-method: inject
         git-push: "true"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Render terraform docs general and push changes back to PR
       uses: terraform-docs/gh-actions@main
