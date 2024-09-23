@@ -29,26 +29,36 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.7.4
-        terraform_wrapper: false
         
-    - name: Install Terraform Docs
-      run: |
-        curl -sSL https://github.com/conda/terraform-docs/releases/latest/download/terraform-docs-linux-amd64 -o /usr/local/bin/terraform-docs
-        chmod +x /usr/local/bin/terraform-docs
-        terraform-docs --version
+    - name: Render terraform docs k8s and push changes back to PR
+      uses: terraform-docs/gh-actions@main
+      with:
+        working-dir: ./modules/k8s/
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
+        
+    - name: Render terraform docs network and push changes back to PR
+      uses: terraform-docs/gh-actions@main
+      with:
+        working-dir: ./modules/network/
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
 
-    - name: Generate Terraform Documentation
-      run: |
-        pwd
-        terraform-docs --version
-        terraform-docs markdown ./modules/k8s/ > README.md
-        terraform-docs markdown ./modules/network/ > README.md
+    - name: Render terraform docs general and push changes back to PR
+      uses: terraform-docs/gh-actions@main
+      with:
+        working-dir: ./
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
 
     - name: Install Terraform Visual
       run: |
