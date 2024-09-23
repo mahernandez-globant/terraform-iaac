@@ -36,6 +36,33 @@ jobs:
       with:
         terraform_version: 1.7.4
         terraform_wrapper: false
+        
+    - name: Install Terraform Docs
+      run: |
+        curl -sSL https://github.com/conda/terraform-docs/releases/latest/download/terraform-docs-linux-amd64 -o /usr/local/bin/terraform-docs
+        chmod +x /usr/local/bin/terraform-docs
+
+    - name: Generate Terraform Documentation
+      run: terraform-docs markdown ./modules > README.md # Cambia el path a tus módulos
+
+    - name: Install Terraform Visual
+      run: |
+        curl -sSL https://github.com/iamtheplanets/terraform-visual/releases/latest/download/terraform-visual-linux-amd64 -o /usr/local/bin/terraform-visual
+        chmod +x /usr/local/bin/terraform-visual
+
+    - name: Create Infrastructure Diagram
+      run: terraform-visual -i ./modules -o diagram.png # Cambia el path a tus archivos de Terraform
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md diagram.png
+        git commit -m "Update documentation and diagram"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
     - id: 'auth'
       name: 'Authenticate to Google Cloud'
