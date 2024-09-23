@@ -61,23 +61,7 @@ jobs:
         git-push: "true"
 
     - name: Install Terraform Visual
-      run: |
-        curl -sSL https://github.com/iamtheplanets/terraform-visual/releases/latest/download/terraform-visual-linux-amd64 -o /usr/local/bin/terraform-visual
-        chmod +x /usr/local/bin/terraform-visual
-
-    - name: Create Infrastructure Diagram
-      run: terraform-visual -i ./modules -o diagram.png # Cambia el path a tus archivos de Terraform
-
-    - name: Commit and push changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add README.md diagram.png
-        git commit -m "Update documentation and diagram"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      run: npm install -g @terraform-visual/cli
 
     - id: 'auth'
       name: 'Authenticate to Google Cloud'
@@ -97,6 +81,7 @@ jobs:
       run: |
         export exitcode=0
         terraform plan -detailed-exitcode -no-color -out tfplan || export exitcode=$?
+        terraform show -json plan.out > plan.json
         echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
           if [ $exitcode -eq 1 ]; then
             echo Terraform Plan Failed!
@@ -104,7 +89,12 @@ jobs:
           else 
             exit 0
           fi
-          
+
+    - name: Create Terraform Visual Report
+      run: |
+        terraform-visual --plan plan.json
+        open terraform-visual-report/index.html
+      
       # Save plan to artifacts  
     - name: Publish Terraform Plan
       uses: actions/upload-artifact@v4
