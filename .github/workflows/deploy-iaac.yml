@@ -41,12 +41,12 @@ jobs:
       run: |
         curl -sSL https://github.com/conda/terraform-docs/releases/latest/download/terraform-docs-linux-amd64 -o /usr/local/bin/terraform-docs
         chmod +x /usr/local/bin/terraform-docs
+        terraform-docs --version
 
     - name: Generate Terraform Documentation
       run: |
         pwd
-        ls
-        echo "TERRAFORM"
+        terraform-docs --version
         terraform-docs markdown ./modules/k8s/ > README.md
         terraform-docs markdown ./modules/network/ > README.md
 
