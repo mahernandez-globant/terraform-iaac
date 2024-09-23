@@ -2,25 +2,22 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 6.3.0 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | n/a |
+No providers.
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_gke"></a> [gke](#module\_gke) | terraform-google-modules/kubernetes-engine/google | ~> 33.0 |
+| <a name="module_gcp-k8s"></a> [gcp-k8s](#module\_gcp-k8s) | ./modules/k8s | n/a |
+| <a name="module_gcp-network"></a> [gcp-network](#module\_gcp-network) | ./modules/network | n/a |
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [google_client_config.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config) | data source |
+No resources.
 
 ## Inputs
 
@@ -29,7 +26,7 @@
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name for the GKE cluster | `string` | `"gke-on-vpc-cluster"` | no |
 | <a name="input_ip_range_pods_name"></a> [ip\_range\_pods\_name](#input\_ip\_range\_pods\_name) | The secondary ip range to use for pods | `string` | `"ip-range-pods"` | no |
 | <a name="input_ip_range_services_name"></a> [ip\_range\_services\_name](#input\_ip\_range\_services\_name) | The secondary ip range to use for services | `string` | `"ip-range-svc"` | no |
-| <a name="input_network"></a> [network](#input\_network) | The network created to host the cluster in | `string` | `"gke-network"` | no |
+| <a name="input_network"></a> [network](#input\_network) | The VPC network created to host the cluster in | `string` | `"gke-network"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID to host the cluster in | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The region to host the cluster in | `string` | `"us-central1"` | no |
 | <a name="input_subnetwork"></a> [subnetwork](#input\_subnetwork) | The subnetwork created to host the cluster in | `string` | `"gke-subnet"` | no |
@@ -42,4 +39,7 @@
 | <a name="output_client_token"></a> [client\_token](#output\_client\_token) | The bearer token for auth |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | Cluster name |
 | <a name="output_kubernetes_endpoint"></a> [kubernetes\_endpoint](#output\_kubernetes\_endpoint) | The cluster endpoint |
+| <a name="output_network_name"></a> [network\_name](#output\_network\_name) | The name of the VPC being created |
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | The default service account used for running nodes. |
+| <a name="output_subnet_name"></a> [subnet\_name](#output\_subnet\_name) | The name of the subnet being created |
+| <a name="output_subnet_secondary_ranges"></a> [subnet\_secondary\_ranges](#output\_subnet\_secondary\_ranges) | The secondary ranges associated with the subnet |
