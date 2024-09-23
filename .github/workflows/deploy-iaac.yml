@@ -45,6 +45,8 @@ jobs:
     - name: Generate Terraform Documentation
       run: |
         pwd
+        ls
+        echo "TERRAFORM"
         terraform-docs markdown ./modules/k8s/ > README.md
         terraform-docs markdown ./modules/network/ > README.md
 
