@@ -43,7 +43,10 @@ jobs:
         chmod +x /usr/local/bin/terraform-docs
 
     - name: Generate Terraform Documentation
-      run: terraform-docs markdown ./modules > README.md # Cambia el path a tus módulos
+      run: |
+        pwd
+        terraform-docs markdown ./modules/k8s/ > README.md
+        terraform-docs markdown ./modules/network/ > README.md
 
     - name: Install Terraform Visual
       run: |
